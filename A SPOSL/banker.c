@@ -1,0 +1,152 @@
+#include<stdio.h>
+intmax[10][10],allocation[10][10],need[10][10]; intavail[10]; 
+intnp,nr; 
+voidreadmatrix(intmatrix[10][10]) 
+{ 
+	inti,j; 
+	for(i=0;i<np;i++) 
+	for(j=0;j<nr;j++) 
+	scanf("%d",&matrix[i][j]); 
+}
+voiddisplay_matrix(intmatrix[10][10]) 
+{ 
+	inti,j; 
+	for(i=0;i<np;i++) 
+	{ 
+		printf("\nP%d",i); 
+		for(j=0;j<nr;j++) 
+		{ 	
+			printf("%d",matrix[i][j]); 
+		} 
+	} 
+}
+voidcalculate_need() 
+{ 
+	inti,j; 
+	for(i=0;i<np;i++) 
+	for(j=0;j<nr;j++) 
+	need[i][j]=max[i][j]-allocation[i][j]; 
+}
+voidbanker() 
+{ 
+	inti,j,k=0,flag; intfinish[10],safe_seq[10]; 
+	for(i=0;i<np;i++) 
+	{
+	 	finish[i]=0; 
+	}
+	for(i=0;i<np;i++) 
+	{ 
+		flag=0; 
+		if(finish[i]==0) 
+		{ 
+			for(j=0;j<nr;j++) 
+			{ 
+				if(need[i][j]>avail[j]) 
+				{ 
+					flag=1; 
+					break;
+				} 
+			}
+			if(flag==0) 
+			{ 
+				finish[i]=1; 
+				safe_seq[k]=i; 
+				k++; 
+				for(j=0;j<nr;j++) 
+				avail[j]+=allocation[i][j]; 
+				i=-1; 
+			} 
+		} 
+	}
+	flag=0; 
+	for(i=0;i<np;i++) 
+	{
+	 	if(finish[i]==0) 
+		 { 
+		 	printf("\nThesystemisindeadlock"); 
+			flag=1; 
+			break; 
+		}	 
+	}
+	if(flag==0) 
+	{ 
+		printf("\nThesystemisinsafestate!!\nSafesequenceis==>"); 
+		for(i=0;i<np;i++) 
+		printf("P%d",safe_seq[i]); 
+	} 
+}
+int main() 
+{ 
+	intj; 
+	{ 
+		printf("\nEnternumberofprocesses::"); 
+		scanf("%d",&np); 
+		printf("\nEnternumberofresources::"); 
+		scanf("%d",&nr); 
+		printf("\nEnterinitialallocationmatrix::"); 
+		readmatrix(allocation); 
+		printf("\nEnterMaxrequirementmatrix::"); 
+		readmatrix(max); 
+		printf("\nEnteravailableresources::"); 
+		for(j=0;j<nr;j++) 
+		scanf("%d",&avail[j]); 
+	}
+	{ 
+		printf("\n***********EnteredDatais***********\n\n"); 
+		printf("\nInitialallocation::\n"); 
+		display_matrix(allocation); 
+		printf("\n\n\nMaximumRequirement\n"); 
+		display_matrix(max); 
+		printf("\nAvailableResources\n"); 
+		for(j=0;j<nr;j++) 
+		printf("%d",avail[j]); 
+	}
+	{
+		calculate_need(); 
+		printf("\n\n\nNeedis\n"); 
+		display_matrix(need); 
+	}
+	banker(); 
+	printf("\n\n\n"); 
+	return 0; 
+}
+
+
+/****************** OUTPUT **************************** Enternumberofprocesses::3
+ Enternumberofresources::3 
+ Enterinitialallocationmatrix::2 
+ 1
+ 3
+ 4
+ 2
+ 6
+ 5
+ 2
+ 
+ 4
+ EnterMaxrequirementmatrix::2 
+ 1
+ 6
+ 4
+ 2
+ 
+ 1
+ 2
+ 0
+ 2
+ 
+ Enteravailableresources::4 
+ 21***********EnteredDatais*********** Initialallocation::
+  P0213 
+  P1426 
+  P2524 
+  MaximumRequirement 
+  P0216
+   P1421 
+   P2202
+AvailableResources 421 
+Needis P0003
+ P100-5 
+ P2-3-2-2
+  Thesystemisinsafestate!! 
+  Safesequenceis==>P1 P0 P2 */
